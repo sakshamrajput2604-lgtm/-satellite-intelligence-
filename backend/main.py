@@ -25,6 +25,48 @@ app.add_middleware(
 # Connect to the local SQLite db
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'users.db')
 
+def init_db():
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE,
+            password TEXT,
+            role TEXT,
+            clearance_level TEXT
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
+            user_id INTEGER PRIMARY KEY,
+            collision_threshold REAL,
+            lookahead_hours REAL
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS alerts (
+            id TEXT PRIMARY KEY,
+            timestamp TEXT,
+            primary_object TEXT,
+            secondary_object TEXT,
+            miss_distance REAL,
+            relative_velocity REAL,
+            risk_score REAL,
+            urgency TEXT,
+            status TEXT
+        )
+    """)
+    cursor.execute("SELECT * FROM users WHERE id = 1")
+    if not cursor.fetchone():
+        cursor.execute("INSERT INTO users (id, email, password, role, clearance_level) VALUES (1, 'admin@aerospace.gov', 'password123', 'COMMANDER', 'TOP_SECRET')")
+        cursor.execute("INSERT INTO settings (user_id, collision_threshold, lookahead_hours) VALUES (1, 5.0, 24.0)")
+    conn.commit()
+    conn.close()
+
+init_db()
+
 ts = load.timescale()
 
 class ConnectionManager:
