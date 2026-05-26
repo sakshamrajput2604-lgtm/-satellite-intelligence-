@@ -1,0 +1,29 @@
+# Node
+node_modules/
+.next/
+dist/
+out/
+build/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+.env
+
+# Database
+users.db
+users.db-journal
+
+# Next.js
+.env*.local
+.vercel
+
+# OS
+.DS_Store
+Thumbs.db
