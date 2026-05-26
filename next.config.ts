@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/ws/:path*',
-        destination: `${backendUrl.replace('http', 'ws')}/ws/:path*`,
+        destination: `${backendUrl}/ws/:path*`,
       },
     ];
   },
